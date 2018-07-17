@@ -8,8 +8,8 @@
 	</parent>
 
 	<groupId>org.webjars</groupId>
-	<artifactId>WEBJAR_ID</artifactId>
-	<version>UPSTREAM_VERSION-SNAPSHOT</version>
+	<artifactId>jswebpack-webjar</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>jswebpack-webjar</name>
 	<url>http://maven.apache.org</url>
