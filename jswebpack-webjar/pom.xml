@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -12,10 +13,15 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>jswebpack-webjar</name>
+	<description>WebJar for jswebpack</description>
 	<url>http://maven.apache.org</url>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<upstream.version>1.0.0</upstream.version>
+		<upstream.baseurl.viewer>https://github.com/vravikiran/jswebpack/tree/master/dist/js</upstream.baseurl.viewer>
+		<upstream.url>https://github.com/vravikiran/jswebpack-webjar/archive/v${project.version}.zip</upstream.url>
 		<destDir>${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}</destDir>
 	</properties>
 
@@ -28,9 +34,9 @@
 		</dependency>
 	</dependencies>
 	<scm>
-		<url>http://github.com/webjars/example-js</url>
+		<url>https://github.com/vravikiran/jswebpack-webjar</url>
 		<connection>scm:git:https://github.com/vravikiran/jswebpack-webjar.git</connection>
-		<developerConnection>scm:git:https://github.com/vravikiran/jswebpack-webjar.git</developerConnection>
+		<developerConnection>scm:https://github.com/vravikiran/jswebpack-webjar.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<build>
@@ -47,23 +53,40 @@
 								<goal>run</goal>
 							</goals>
 							<configuration>
-								<target>
-									<echo message="moving resources" />
 
-									<copy todir="${webjar.dest}">
-										<fileset
-											dir="${project.build.directory}/${upstream.version}/${upstream.archiveName}/dist" />
-									</copy>
+								<target>
+									<echo message="download viewer" />
+									<get src="${upstream.baseurl.viewer}/addition.js"
+										dest="${project.build.directory}" />
+
+									<echo message="unzip archive" />
+									<unzip
+										src="${project.build.directory}/v${project.version}.zip"
+										dest="${project.build.directory}" />
+
+									<echo message="moving resources" />
+									<move todir="${destDir}">
+										<fileset dir="${project.build.directory}">
+											<include name="**.js" />
+										</fileset>
+									</move>
 								</target>
 							</configuration>
 
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+
 				<plugin>
 					<groupId>org.sonatype.plugins</groupId>
 					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.5</version>
+					<version>1.6.2</version>
 					<extensions>true</extensions>
 					<configuration>
 						<serverId>sonatype-nexus-staging</serverId>
